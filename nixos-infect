@@ -32,11 +32,26 @@ makeConf() {
   networking.hostName = "$(hostname -s)";
   networking.domain = "$(hostname -d)";
   services.openssh.enable = true;
+
+  # Disable sudo prompt for `wheel` users.
+  security.sudo.wheelNeedsPassword = lib.mkDefault false;
+
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWAhk5S+avro5gxS6ToyZGVd01objc494X8tD/tsO+j roshan@x510"
     $(while read -r line; do echo -n "
     \"$line\" "; done <<< "$keys")
   ];
+
+  users.extraUsers.thedev = {
+    isNormalUser = true;
+    createHome = true;
+    group = "users";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWAhk5S+avro5gxS6ToyZGVd01objc494X8tD/tsO+j roshan@x510"
+    ];
+
+    extraGroups = [  "wheel" ];
+  };
 }
 EOF
 
