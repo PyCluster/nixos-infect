@@ -20,7 +20,7 @@ makeConf() {
 
   [[ -n "$doNetConf" ]] && network_import="./networking.nix # generated at runtime by nixos-infect"
   cat > /etc/nixos/configuration.nix << EOF
-{ lib,... }: {
+{ ... }: {
   imports = [
     ./hardware-configuration.nix
     $network_import
@@ -34,7 +34,7 @@ makeConf() {
   services.openssh.enable = true;
 
   # Disable sudo prompt for `wheel` users.
-  security.sudo.wheelNeedsPassword = lib.mkDefault false;
+  security.sudo.wheelNeedsPassword = pkgs.lib.mkDefault false;
 
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWAhk5S+avro5gxS6ToyZGVd01objc494X8tD/tsO+j roshan@x510"
